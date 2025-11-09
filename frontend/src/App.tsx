@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import  { RoutesTab }  from './adapters/ui/tabs/RouterTab'
-import  CompareTab  from './adapters/ui/tabs/CompareTab'
+import  { CompareTab }  from './adapters/ui/tabs/CompareTab'
 import  BankingTab  from './adapters/ui/tabs/BankingTab'
 import  PoolingTab  from './adapters/ui/tabs/PoolingTab'
 import { DashboardTabs }  from './adapters/ui/tabs/DashboardTabs'
