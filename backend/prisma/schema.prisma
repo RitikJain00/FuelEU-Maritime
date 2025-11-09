@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./node_modules/@prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Route {
+  id              Int     @id @default(autoincrement())
+  routeId         String
+  vesselType      String
+  fuelType        String
+  year            Int
+  ghgIntensity    Float
+  fuelConsumption Float
+  distance        Float
+  totalEmissions  Float
+  isBaseline      Boolean @default(false)
+
+  @@index([routeId, year])
+}
+
+model ShipCompliance {
+  id          Int          @id @default(autoincrement())
+  ship_id     String
+  year        Int
+  cb_gco2eq   Float
+  poolMembers PoolMember[]
+
+  @@index([ship_id, year])
+}
+
+model BankEntry {
+  id            Int    @id @default(autoincrement())
+  ship_id       String
+  year          Int
+  amount_gco2eq Float
+
+  @@index([ship_id, year])
+}
+
+model Pool {
+  id         Int          @id @default(autoincrement())
+  year       Int
+  created_at DateTime     @default(now())
+  members    PoolMember[]
+}
+
+model PoolMember {
+  id                 Int    @id @default(autoincrement())
+  pool_id            Int
+  ship_compliance_id Int // ✅ Foreign key for ShipCompliance
+  ship_id            String
+  cb_before          Float
+  cb_after           Float
+
+  pool           Pool           @relation(fields: [pool_id], references: [id])
+  shipCompliance ShipCompliance @relation(fields: [ship_compliance_id], references: [id])
+
+  @@index([pool_id])
+  @@index([ship_compliance_id])
+}
