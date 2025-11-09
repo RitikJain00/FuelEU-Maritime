@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import './App.css'
-import  RoutesTab  from './adapters/ui/pages/RouterTab'
-import  CompareTab  from './adapters/ui/pages/CompareTab'
-import  BankingTab  from './adapters/ui/pages/BankingTab'
-import  PoolingTab  from './adapters/ui/pages/PoolingTab'
-import { DashboardTabs }  from './adapters/ui/pages/DashboardTabs'
+import  { RoutesTab }  from './adapters/ui/tabs/RouterTab'
+import  CompareTab  from './adapters/ui/tabs/CompareTab'
+import  BankingTab  from './adapters/ui/tabs/BankingTab'
+import  PoolingTab  from './adapters/ui/tabs/PoolingTab'
+import { DashboardTabs }  from './adapters/ui/tabs/DashboardTabs'
 
 function App() {
     const [activeTab, setActiveTab] = useState("routes")
