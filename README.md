@@ -128,6 +128,27 @@ cd FuelEU-Maritime
   npm install
   npm run dev
 
+```
+
+## 📷 Screenshots
+
+### 📌 FuelEU-Maritime Interface
+
+![Routes Tab](assets/route.png)
+![Compare Tab](assets/compare.png)
+
+![Banking Tab](assets/bank.png)
+![Pooling Tab](assets/pools.png)
+
+
+### 🧠Postgress View
+
+![Database](assets/Database.png)
+
+
+---
+
+
 
 
 
