@@ -12,8 +12,9 @@ export function useComparison() {
   useEffect(() => {
     const fetchComparison = async () => {
       try {
-        const response = await fetch("/api/routes/comparison")
+        const response = await fetch("http://localhost:3000/api/routes/comparison")
         const data = await response.json()
+        console.log(data);
         setBaseline(data.baseline)
         setComparison(data.comparison)
         setError(null)

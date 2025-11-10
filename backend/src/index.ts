@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
+import { routesController} from "./adapter/http/routesController";
+
 // Load environment variables from .env
 dotenv.config();
 
@@ -17,7 +19,7 @@ app.get("/", (_req: Request, res: Response) => {
   res.json({ message: "FuelEU Maritime Backend API is running 🚢" });
 });
 
-
+app.use("/api/routes", routesController);
 
 // Start server
 app.listen(PORT, () => {

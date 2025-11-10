@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../components/card"
-
 import {
   BarChart,
   Bar,
@@ -12,7 +11,6 @@ import {
   ReferenceLine,
 } from "recharts"
 import type { Route } from "../../../core/domain/models/Route"
-
 
 const TARGET_GHG = 89.3368
 
@@ -29,7 +27,7 @@ export function ComparisonChart({ baseline, comparison }: ComparisonChartProps) 
   }))
 
   return (
-    <Card>
+    <Card className="bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
       <CardHeader>
         <CardTitle>GHG Intensity Comparison</CardTitle>
       </CardHeader>
@@ -37,24 +35,43 @@ export function ComparisonChart({ baseline, comparison }: ComparisonChartProps) 
         <div className="w-full h-80">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--color-border))" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+              <XAxis dataKey="name" tick={{ fill: "#ccc" }} axisLine={{ stroke: "#666" }} />
+              <YAxis tick={{ fill: "#ccc" }} axisLine={{ stroke: "#666" }} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--color-card))",
-                  border: "1px solid hsl(var(--color-border))",
+                  backgroundColor: "#1e1e1e",
+                  border: "1px solid #555",
+                  color: "#f5f5f5",
                 }}
                 formatter={(value: number) => `${value.toFixed(2)} gCO₂e/MJ`}
               />
-              <Legend />
+              <Legend wrapperStyle={{ color: "#aaa" }} />
               <ReferenceLine
                 y={TARGET_GHG}
-                stroke="hsl(var(--color-destructive))"
-                label={{ value: `Target: ${TARGET_GHG}`, position: "insideTopLeft", offset: -10 }}
+                stroke="#ff4d4f"
+                strokeDasharray="4 4"
+                label={{
+                  value: `Target: ${TARGET_GHG.toFixed(2)}`,
+                  position: "insideTopLeft",
+                  fill: "#ff4d4f",
+                  fontSize: 12,
+                }}
               />
-              <Bar dataKey="ghgIntensity" fill="hsl(var(--color-chart-1))" name="Route GHG" />
-              <Bar dataKey="baseline" fill="hsl(var(--color-chart-2))" name="Baseline GHG" />
+              {/* ✅ Custom bar colors for dark theme */}
+              <Bar
+                dataKey="ghgIntensity"
+                fill="#3b82f6" // soft blue for route
+                name="Route GHG"
+                radius={[6, 6, 0, 0]}
+              />
+              <Bar
+                dataKey="baseline"
+                fill="#a855f7" // purple for baseline
+                name="Baseline GHG"
+                radius={[6, 6, 0, 0]}
+                opacity={0.8}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -62,5 +79,3 @@ export function ComparisonChart({ baseline, comparison }: ComparisonChartProps) 
     </Card>
   )
 }
-
-

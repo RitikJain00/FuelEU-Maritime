@@ -10,7 +10,7 @@ export function useRoutes() {
   useEffect(() => {
     const fetchRoutes = async () => {
       try {
-        const response = await fetch("/api/routes")
+        const response = await fetch("http://localhost:3000/api/routes")
         const data = await response.json()
         setRoutes(data)
       } catch (error) {
@@ -25,7 +25,7 @@ export function useRoutes() {
 
   const setBaseline = async (routeId: string) => {
     try {
-      await fetch(`/api/routes/${routeId}/baseline`, { method: "POST" })
+      await fetch(`http://localhost:3000/api/routes/${routeId}/baseline`, { method: "POST" })
     } catch (error) {
       console.error("Failed to set baseline:", error)
     }
