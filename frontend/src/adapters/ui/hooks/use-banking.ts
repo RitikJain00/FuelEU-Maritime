@@ -1,7 +1,16 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import type { CreditBalance } from "../../../core/domain/models/credit-balance"
+
+export interface BankEntry {
+  amount_gco2eq: number
+}
+
+export interface CreditBalance {
+  cb_before: number
+  cb_after: number
+  bankEntries: BankEntry[]
+}
 
 export function useBanking() {
   const [creditBalance, setCreditBalance] = useState<CreditBalance | null>(null)
@@ -11,7 +20,9 @@ export function useBanking() {
   const fetchCreditBalance = useCallback(async (shipId: string, year: number) => {
     setLoading(true)
     try {
-      const response = await fetch(`http://localhost:3000/api/banking/records?shipId=${shipId}&year=${year}`)
+      const response = await fetch(
+        `http://localhost:3000/api/banking/records?shipId=${shipId}&year=${year}`
+      )
       const data = await response.json()
       setCreditBalance(data)
       setError(null)
@@ -23,13 +34,13 @@ export function useBanking() {
     }
   }, [])
 
-  const bankCredit = useCallback(async (shipId: string, amount: number, year: number) => {
+  const bankCredit = useCallback(async (shipId: string, year: number) => {
     setLoading(true)
     try {
       const response = await fetch("http://localhost:3000/api/banking/bank", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ shipId, amount, year }),
+        body: JSON.stringify({ shipId, year }),
       })
       const data = await response.json()
       setCreditBalance(data)

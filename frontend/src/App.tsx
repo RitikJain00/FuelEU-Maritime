@@ -8,7 +8,7 @@ import { ThemeProvider } from "./ThemeProvider"
 
 function App() {
     const [activeTab, setActiveTab] = useState("routes")
-  const [count, setCount] = useState(0)
+ 
 
   return (
     <ThemeProvider>

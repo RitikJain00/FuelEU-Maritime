@@ -2,16 +2,18 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/card"
-import { Button } from "../components//button"
-import { Input } from "../components//input"
-import { Checkbox } from "../components//checkbox"
-import { usePooling } from "../hooks/use-pooiling"
+import { Button } from "../components/button"
+import { Input } from "../components/input"
+import { Checkbox } from "../components/checkbox"
+import { usePooling} from "../hooks/use-pooiling"
+
+
 
 export function PoolingTab() {
   const [year, setYear] = useState(new Date().getFullYear().toString())
   const [selectedShips, setSelectedShips] = useState<string[]>([])
   const [poolSum, setPoolSum] = useState(0)
-  const [poolMembers, setPoolMembers] = useState<Array<{ shipId: string; cb_before: number; cb_after?: number }>>([])
+  const [poolMembers, setPoolMembers] = useState<Array<{ shipId: string; cb_before: number }>>([])
 
   const { ships, loading, createPool } = usePooling(Number.parseInt(year))
 
@@ -25,16 +27,20 @@ export function PoolingTab() {
   const isValid = poolSum >= 0 && selectedShips.length > 0
 
   const handleToggleShip = (shipId: string) => {
-    setSelectedShips((prev) => (prev.includes(shipId) ? prev.filter((id) => id !== shipId) : [...prev, shipId]))
+    setSelectedShips((prev) =>
+      prev.includes(shipId) ? prev.filter((id) => id !== shipId) : [...prev, shipId]
+    )
   }
 
   const handleCreatePool = async () => {
-    await createPool(selectedShips)
+    const selectedShipObjects = ships.filter((ship) => selectedShips.includes(ship.shipId))
+    await createPool(selectedShipObjects)
     setSelectedShips([])
   }
 
   return (
     <div className="space-y-6">
+      {/* Year selection */}
       <Card>
         <CardHeader>
           <CardTitle>Article 21 – Compliance Pooling</CardTitle>
@@ -42,11 +48,17 @@ export function PoolingTab() {
         <CardContent>
           <div>
             <label className="text-sm font-medium text-foreground">Year</label>
-            <Input type="number" value={year} onChange={(e) => setYear(e.target.value)} className="mt-2" />
+            <Input
+              type="number"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className="mt-2"
+            />
           </div>
         </CardContent>
       </Card>
 
+      {/* Ship selection */}
       <Card>
         <CardHeader>
           <CardTitle>Select Pool Members</CardTitle>
@@ -74,7 +86,9 @@ export function PoolingTab() {
                     </div>
                   </div>
                   <div
-                    className={`text-right text-sm font-medium ${ship.adjustedCB >= 0 ? "text-green-600" : "text-destructive"}`}
+                    className={`text-right text-sm font-medium ${
+                      ship.adjustedCB >= 0 ? "text-green-600" : "text-destructive"
+                    }`}
                   >
                     {ship.adjustedCB >= 0 ? "↑ Surplus" : "↓ Deficit"}
                   </div>
@@ -85,6 +99,7 @@ export function PoolingTab() {
         </CardContent>
       </Card>
 
+      {/* Pool summary */}
       {selectedShips.length > 0 && (
         <Card>
           <CardHeader>
@@ -93,9 +108,14 @@ export function PoolingTab() {
           <CardContent>
             <div className="space-y-2">
               {poolMembers.map((member) => (
-                <div key={member.shipId} className="flex items-center justify-between p-2 bg-muted rounded">
+                <div
+                  key={member.shipId}
+                  className="flex items-center justify-between p-2 bg-muted rounded"
+                >
                   <span className="text-sm font-medium">{member.shipId}</span>
-                  <span className="text-sm text-muted-foreground">Before: {member.cb_before.toFixed(2)}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Before: {member.cb_before.toFixed(2)}
+                  </span>
                 </div>
               ))}
             </div>
@@ -103,43 +123,35 @@ export function PoolingTab() {
         </Card>
       )}
 
+      {/* Pool validation */}
       <Card>
         <CardHeader>
           <CardTitle>Pool Validation</CardTitle>
         </CardHeader>
         <CardContent>
           <div
-            className={`p-4 rounded-lg ${poolSum >= 0 ? "bg-green-500/10 border border-green-500/30" : "bg-destructive/10 border border-destructive/20"}`}
+            className={`p-4 rounded-lg ${
+              poolSum >= 0
+                ? "bg-green-500/10 border border-green-500/30"
+                : "bg-destructive/10 border border-destructive/20"
+            }`}
           >
             <p className="text-sm text-muted-foreground">Total Pool CB Sum</p>
-            <p className={`text-3xl font-bold ${poolSum >= 0 ? "text-green-600" : "text-destructive"}`}>
+            <p
+              className={`text-3xl font-bold ${
+                poolSum >= 0 ? "text-green-600" : "text-destructive"
+              }`}
+            >
               {poolSum.toFixed(2)}
             </p>
             <p className="text-sm mt-2 text-muted-foreground">
               {poolSum >= 0 ? "✓ Pool is compliant (Sum ≥ 0)" : "✗ Pool is invalid (Sum < 0)"}
             </p>
           </div>
-
-          {selectedShips.length > 0 && (
-            <div className="mt-4 space-y-2">
-              <p className="text-sm font-medium text-foreground">Validation Rules:</p>
-              <ul className="space-y-1 text-sm text-muted-foreground">
-                <li className={poolSum >= 0 ? "text-green-600" : "text-destructive"}>
-                  ✓ Sum(CB) ≥ 0: {poolSum >= 0 ? "PASS" : "FAIL"}
-                </li>
-                <li className="text-green-600">✓ Members selected: {selectedShips.length}</li>
-                <li className="text-muted-foreground">
-                  • Deficit ships cannot exit worse (protected by greedy allocation)
-                </li>
-                <li className="text-muted-foreground">
-                  • Surplus ships cannot exit negative (protected by greedy allocation)
-                </li>
-              </ul>
-            </div>
-          )}
         </CardContent>
       </Card>
 
+      {/* Create pool button */}
       {selectedShips.length > 0 && (
         <Card>
           <CardHeader>
@@ -155,7 +167,9 @@ export function PoolingTab() {
               {loading ? "Creating Pool..." : "Create Pool"}
             </Button>
             {!isValid && poolSum < 0 && (
-              <p className="text-sm text-destructive mt-3">Cannot create pool: Sum must be ≥ 0</p>
+              <p className="text-sm text-destructive mt-3">
+                Cannot create pool: Sum must be ≥ 0
+              </p>
             )}
           </CardContent>
         </Card>
