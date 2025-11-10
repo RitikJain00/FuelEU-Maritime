@@ -35,7 +35,7 @@ model ShipCompliance {
   cb_gco2eq   Float
   poolMembers PoolMember[]
 
-  @@index([ship_id, year])
+  @@unique([ship_id, year], name: "ship_id_year") // ✅ needed for upsert/findUnique
 }
 
 model BankEntry {

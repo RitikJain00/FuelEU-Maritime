@@ -1,70 +1,69 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.route.createMany({
-    data: [
-      {
-        routeId: "R001",
-        vesselType: "Container",
-        fuelType: "HFO",
-        year: 2024,
-        ghgIntensity: 91.0,
-        fuelConsumption: 5000,
-        distance: 12000,
-        totalEmissions: 4500,
-        isBaseline: false,
-      },
-      {
-        routeId: "R002",
-        vesselType: "BulkCarrier",
-        fuelType: "LNG",
-        year: 2024,
-        ghgIntensity: 88.0,
-        fuelConsumption: 4800,
-        distance: 11500,
-        totalEmissions: 4200,
-        isBaseline: false,
-      },
-      {
-        routeId: "R003",
-        vesselType: "Tanker",
-        fuelType: "MGO",
-        year: 2024,
-        ghgIntensity: 93.5,
-        fuelConsumption: 5100,
-        distance: 12500,
-        totalEmissions: 4700,
-        isBaseline: true,
-      },
-      {
-        routeId: "R004",
-        vesselType: "RoRo",
-        fuelType: "HFO",
-        year: 2025,
-        ghgIntensity: 89.2,
-        fuelConsumption: 4900,
-        distance: 11800,
-        totalEmissions: 4300,
-        isBaseline: false,
-      },
-      {
-        routeId: "R005",
-        vesselType: "Container",
-        fuelType: "LNG",
-        year: 2025,
-        ghgIntensity: 90.5,
-        fuelConsumption: 4950,
-        distance: 11900,
-        totalEmissions: 4400,
-        isBaseline: false,
-      },
-    ],
-  });
+  console.log("🌱 Seeding ShipCompliance and BankEntry data...")
 
-  console.log("✅ Seeded route data successfully in Neon DB!");
+  // 1️⃣ Clear old records (optional for dev)
+  await prisma.bankEntry.deleteMany()
+  await prisma.shipCompliance.deleteMany()
+
+  // 2️⃣ Insert ShipCompliance data
+  const shipComplianceData = [
+    {
+      ship_id: "S001",
+      year: 2024,
+      cb_gco2eq: 120000, // positive = surplus
+    },
+    {
+      ship_id: "S002",
+      year: 2024,
+      cb_gco2eq: -80000, // negative = deficit
+    },
+    {
+      ship_id: "S003",
+      year: 2024,
+      cb_gco2eq: 50000,
+    },
+    {
+      ship_id: "S004",
+      year: 2024,
+      cb_gco2eq: -20000,
+    },
+  ]
+
+  await prisma.shipCompliance.createMany({ data: shipComplianceData })
+
+  // 3️⃣ Add some bank entries (simulate prior banking actions)
+  const bankEntryData = [
+    {
+      ship_id: "S001",
+      year: 2024,
+      amount_gco2eq: 50000, // banked surplus
+    },
+    {
+      ship_id: "S003",
+      year: 2024,
+      amount_gco2eq: 20000, // small banked surplus
+    },
+    {
+      ship_id: "S001",
+      year: 2023,
+      amount_gco2eq: 30000, // previous year bank
+    },
+  ]
+
+  await prisma.bankEntry.createMany({ data: bankEntryData })
+
+  console.log("✅ Seeding completed successfully!")
 }
 
 main()
-  .catch((err) => console.error(err))
-  .finally(() => prisma.$disconnect());
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+
+  })
