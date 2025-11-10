@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client"
-const prisma = new PrismaClient()
+import { prisma } from "../../lib/prisma"
+
 
 const TARGET_INTENSITY = 89.3368
 const ENERGY_PER_TON = 41000 // MJ per tonne

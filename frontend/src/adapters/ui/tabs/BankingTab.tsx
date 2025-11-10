@@ -10,7 +10,7 @@ export function BankingTab() {
   const [year, setYear] = useState(new Date().getFullYear().toString())
   const [bankAmount, setBankAmount] = useState("")
   const [applyAmount, setApplyAmount] = useState("")
-  const [shipId, setShipId] = useState("SHIP-001")
+  const [shipId, setShipId] = useState("S001")
 
   const { creditBalance, loading, error, fetchCreditBalance, bankCredit, applyCredit } = useBanking()
   const hasInitialized = useRef(false)
@@ -59,33 +59,36 @@ export function BankingTab() {
                 value={shipId}
                 onChange={(e) => setShipId(e.target.value)}
                 className="mt-2"
-                placeholder="e.g., SHIP-001"
+                placeholder="e.g., 001"
               />
             </div>
             <div>
               <label className="text-sm font-medium text-foreground">Year</label>
               <Input type="number" value={year} onChange={(e) => setYear(e.target.value)} className="mt-2" />
             </div>
-            {creditBalance && (
-              <>
-                <div className="bg-muted p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground">CB Before</p>
-                  <p
-                    className={`text-2xl font-bold ${creditBalance.cb_before >= 0 ? "text-green-600" : "text-destructive"}`}
-                  >
-                    {creditBalance.cb_before.toFixed(2)}
-                  </p>
-                </div>
-                <div className="bg-muted p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground">CB After</p>
-                  <p
-                    className={`text-2xl font-bold ${creditBalance.cb_after >= 0 ? "text-green-600" : "text-destructive"}`}
-                  >
-                    {creditBalance.cb_after.toFixed(2)}
-                  </p>
-                </div>
-              </>
-            )}
+           {creditBalance ? (
+          <>
+            <div className="bg-muted p-4 rounded-lg">
+              <p className="text-sm text-muted-foreground">CB Before</p>
+              <p
+                className={`text-2xl font-bold ${creditBalance.cb_before >= 0 ? "text-green-600" : "text-destructive"}`}
+              >
+                {creditBalance.cb_before?.toFixed(2) ?? "0.00"}
+              </p>
+            </div>
+            <div className="bg-muted p-4 rounded-lg">
+              <p className="text-sm text-muted-foreground">CB After</p>
+              <p
+                className={`text-2xl font-bold ${creditBalance.cb_after >= 0 ? "text-green-600" : "text-destructive"}`}
+              >
+                {creditBalance.cb_after?.toFixed(2) ?? "0.00"}
+              </p>
+            </div>
+          </>
+        ) : (
+          <p className="text-muted-foreground col-span-2 mt-4">No data found for this ship/year</p>
+        )}
+
           </div>
           {error && <p className="text-destructive mt-4 text-sm">{error}</p>}
           {loading && <p className="text-muted-foreground mt-4 text-sm">Loading...</p>}

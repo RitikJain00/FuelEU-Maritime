@@ -12,22 +12,22 @@ async function main() {
   const shipComplianceData = [
     {
       ship_id: "S001",
-      year: 2024,
+      year: 2025,
       cb_gco2eq: 120000, // positive = surplus
     },
     {
       ship_id: "S002",
-      year: 2024,
+      year: 2025,
       cb_gco2eq: -80000, // negative = deficit
     },
     {
       ship_id: "S003",
-      year: 2024,
+      year: 2025,
       cb_gco2eq: 50000,
     },
     {
       ship_id: "S004",
-      year: 2024,
+      year: 2025,
       cb_gco2eq: -20000,
     },
   ]
@@ -38,17 +38,17 @@ async function main() {
   const bankEntryData = [
     {
       ship_id: "S001",
-      year: 2024,
+      year: 2025,
       amount_gco2eq: 50000, // banked surplus
     },
     {
       ship_id: "S003",
-      year: 2024,
+      year: 2025,
       amount_gco2eq: 20000, // small banked surplus
     },
     {
       ship_id: "S001",
-      year: 2023,
+      year: 2025,
       amount_gco2eq: 30000, // previous year bank
     },
   ]

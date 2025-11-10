@@ -11,7 +11,7 @@ export function useBanking() {
   const fetchCreditBalance = useCallback(async (shipId: string, year: number) => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/banking/records?shipId=${shipId}&year=${year}`)
+      const response = await fetch(`http://localhost:3000/api/banking/records?shipId=${shipId}&year=${year}`)
       const data = await response.json()
       setCreditBalance(data)
       setError(null)
@@ -26,7 +26,7 @@ export function useBanking() {
   const bankCredit = useCallback(async (shipId: string, amount: number, year: number) => {
     setLoading(true)
     try {
-      const response = await fetch("/api/banking/bank", {
+      const response = await fetch("http://localhost:3000/api/banking/bank", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ shipId, amount, year }),
@@ -45,7 +45,7 @@ export function useBanking() {
   const applyCredit = useCallback(async (shipId: string, amount: number, year: number) => {
     setLoading(true)
     try {
-      const response = await fetch("/api/banking/apply", {
+      const response = await fetch("http://localhost:3000/api/banking/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ shipId, amount, year }),

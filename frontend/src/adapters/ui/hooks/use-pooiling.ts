@@ -1,7 +1,11 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import type { Ship } from "../../../core/domain/models/ship"
+
+export interface Ship {
+  shipId: string
+  adjustedCB: number
+}
 
 export function usePooling(year: number = new Date().getFullYear()) {
   const [ships, setShips] = useState<Ship[]>([])
@@ -11,8 +15,15 @@ export function usePooling(year: number = new Date().getFullYear()) {
     const fetchShips = async () => {
       setLoading(true)
       try {
-        const response = await fetch(`/api/compliance/adjusted-cb?year=${year}`)
+        const response = await fetch(`http://localhost:3000/api/compliance/adjusted-cb?year=${year}`)
         const data = await response.json()
+
+        if (!Array.isArray(data)) {
+          console.error("Unexpected response:", data)
+          setShips([])
+          return
+        }
+
         setShips(data)
       } catch (error) {
         console.error("Failed to fetch ships:", error)
@@ -28,7 +39,7 @@ export function usePooling(year: number = new Date().getFullYear()) {
     async (shipIds: string[]) => {
       setLoading(true)
       try {
-        await fetch("/api/pools", {
+        await fetch("http://localhost:3000/api/pools", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ members: shipIds, year }),

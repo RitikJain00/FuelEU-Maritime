@@ -48,10 +48,10 @@ model BankEntry {
 }
 
 model Pool {
-  id         Int          @id @default(autoincrement())
-  year       Int
-  created_at DateTime     @default(now())
-  members    PoolMember[]
+  id              Int          @id @default(autoincrement())
+  year            Int
+  total_cb_gco2eq Float
+  members         PoolMember[]
 }
 
 model PoolMember {

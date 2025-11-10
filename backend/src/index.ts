@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { routesController} from "./adapter/http/routesController";
 import { complianceController } from "./adapter/http/complianceController";
 import { bankingController } from "./adapter/http/bankingController";
+import { poolController } from "./adapter/http/poolsController";
 
 // Load environment variables from .env
 dotenv.config();
@@ -24,6 +25,8 @@ app.get("/", (_req: Request, res: Response) => {
 app.use("/api/routes", routesController);
 app.use("/api/compliance", complianceController)
 app.use("/api/banking", bankingController)
+app.use("/api/pools", poolController)
+
 
 // Start server
 app.listen(PORT, () => {

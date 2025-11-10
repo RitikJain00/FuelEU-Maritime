@@ -1,8 +1,7 @@
 import express from "express"
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "../../lib/prisma"
 import { BankingService } from "../../core/application/bankingService.js"
 
-const prisma = new PrismaClient()
 const service = new BankingService()
 export const bankingController = express.Router()
 
